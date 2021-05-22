@@ -17,7 +17,7 @@
 //==============================================================================
 /*
 */
-class Spring : public juce::Component
+class Spring
 {
 public:
     Spring()
@@ -34,8 +34,8 @@ public:
 
     ~Spring()
     {
-    }
-
+    }    
+    
     void update()
     {
         glm::vec2 force = p2->position - p1->position;
