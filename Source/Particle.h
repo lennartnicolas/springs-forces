@@ -27,22 +27,15 @@ public:
     void paint (juce::Graphics& g) override
     {
         g.setColour(juce::Colours::white);
-        //g.fillRect(0, 0, 40, 40);
+        if(showParticle)
+        {
+            g.drawRect(0, 0, 20, 20);
+        }
     }
     
     void resized() override
     {
     }
-    
-//    void mouseEnter(const juce::MouseEvent& event) override
-//    {
-//        if(!isLocked)
-//        {
-//            position.x = getMouseXYRelative().getX();
-//            position.y = getMouseXYRelative().getY();
-//        }
-//
-//    }
 
     Particle(float x, float y)
     {
@@ -51,6 +44,7 @@ public:
         position     = glm::vec2(x,y);
         mass = 0.3f;
         isLocked = false;
+        showParticle = false;
     }
 
     ~Particle()
@@ -78,10 +72,16 @@ public:
         isLocked = lock;
     }
     
+    void setParticleVisible(bool show)
+    {
+        showParticle = show;
+    }
+    
     glm::vec2 acceleration;
     glm::vec2 velocity;
     glm::vec2 position;
     float mass;
     bool isLocked;
+    bool showParticle;
     
 };

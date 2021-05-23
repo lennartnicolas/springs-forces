@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="IKFhXP" name="springs" projectType="guiapp" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              headerPath="/Users/lennartnicolas/Documents/OpenGL-Libs/glm/glm">
   <MAINGROUP id="HDqbg6" name="springs">
     <GROUP id="{76D8F11E-0535-A53E-ECF2-F1BF9F0B3BBF}" name="Source">
+      <FILE id="UgVRge" name="Grid.h" compile="0" resource="0" file="Source/Grid.h"/>
       <FILE id="Ayxc97" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="JVtTcW" name="Particle.h" compile="0" resource="0" file="Source/Particle.h"/>
       <FILE id="bxb2f4" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
