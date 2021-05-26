@@ -23,9 +23,15 @@ class Grid  : public juce::Component
 public:
     Grid()
     {
+        gravity = glm::vec2(0.0,0.1);
+        applyGravity = false;
     }
     
-    void setGrid(int gSize, float springConstant, int localBounds, int offSet = 0)
+    ~Grid() override
+    {
+    }
+    
+    void setGrid(int gSize, float springConstant, float localBounds, float offSet = 0)
     {
         particles.clear();
         springs.clear();
@@ -72,22 +78,16 @@ public:
         }
         
     }
-
-    ~Grid() override
+    
+    void setStiffness(float stiffness)
     {
-    }
-
-    void paint (juce::Graphics& g) override
-    {
-        
-//        g.setColour(juce::Colours::transparentBlack);
-//        g.fillRect(getLocalBounds());
-        g.setColour(juce::Colours::white);
-        
         for(const auto& s : springs)
-        {
-            g.drawLine(s->p1->position.x, s->p1->position.y, s->p2->position.x, s->p2->position.y, 2.f);
-        }
+            s->_k = fmod(stiffness, 0.1f);
+    }
+    
+    void setGravity(bool on)
+    {
+        applyGravity = on;
     }
     
     void updateGrid()
@@ -101,7 +101,6 @@ public:
         {
             if(p->isMouseButtonDown())
             {
-                
                 if(!p->isLocked)
                 {
                     //p->setParticleVisible(true);
@@ -112,8 +111,26 @@ public:
                     //p->setParticleVisible(false);
             }
 
+            if(applyGravity)
+                p->applyForce(gravity);
+            
             p->update();
             p->repaint();
+        }
+    }
+    
+    
+    //==============================================================================
+    
+    void paint (juce::Graphics& g) override
+    {
+        g.setColour(juce::Colours::orange);
+        g.drawRect(getLocalBounds());
+        g.setColour(juce::Colours::white);
+        
+        for(const auto& s : springs)
+        {
+            g.drawLine(s->p1->position.x, s->p1->position.y, s->p2->position.x, s->p2->position.y, 2.f);
         }
     }
 
@@ -124,11 +141,16 @@ public:
             p->setBounds(p->position.x - 10, p->position.y - 10, 50, 50);
         }
     }
+    
+    //==============================================================================
 
     std::vector<std::shared_ptr<Spring> > springs;
     std::vector<std::shared_ptr<Particle> > particles;
 
 private:
+    
+    bool applyGravity;
+    glm::vec2 gravity;
     float k;
     float spacing;
     

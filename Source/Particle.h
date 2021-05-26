@@ -42,7 +42,8 @@ public:
         acceleration = glm::vec2(0,0);
         velocity     = glm::vec2(0,0);
         position     = glm::vec2(x,y);
-        mass = 0.3f;
+        initPos      = glm::vec2(x,y);
+        mass = 0.5f;
         isLocked = false;
         showParticle = false;
     }
@@ -80,8 +81,9 @@ public:
     glm::vec2 acceleration;
     glm::vec2 velocity;
     glm::vec2 position;
+    glm::vec2 initPos;
+    
     float mass;
     bool isLocked;
-    bool showParticle;
-    
+    bool showParticle;    
 };
