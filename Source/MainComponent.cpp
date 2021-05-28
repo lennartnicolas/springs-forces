@@ -54,7 +54,7 @@ MainComponent::MainComponent()
     createWavetable();
     
     
-    startTimerHz(60);
+    startTimerHz(30);
     setSize (900, 600);
     setAudioChannels(0, 2);
 }
@@ -101,6 +101,7 @@ void MainComponent::updateOscillators()
 {
     oscillators.clear();
     relatedIndices.clear();
+    pSmoother.clear();
     
     for(int i = 0; i < grid.particles.size(); i++)
     {
@@ -110,6 +111,9 @@ void MainComponent::updateOscillators()
             osc->setFrequency((i+1) * 30, currentSamplerate);
             oscillators.push_back(osc);
             relatedIndices.push_back(i);
+            auto level = fabs(roundf((grid.particles.at(i)->position.x / grid.particles.at(i)->initPos.x - 1.f) * 1000.f) / 1000.f);
+            pSmoother.push_back(juce::SmoothedValue<float>(level));
+            pSmoother.back().reset(currentSamplerate, 0.01);
         }
     }
 }
@@ -125,21 +129,21 @@ void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo &buffer
     auto* rightBuffer = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
     
     bufferToFill.clearActiveBufferRegion();
-
+    
     for(int i = 0; i < oscillators.size(); i++)
     {
         auto particle = grid.particles.at(relatedIndices.at(i));
-        auto level = fabs(roundf((particle->position.x / particle->initPos.x - 1.f) * 100.f) / 100.f);
+        auto level = fabs(roundf((particle->position.x / particle->initPos.x - 1.f) * 1000.f) / 1000.f);
         
-        for(auto sample = 0; sample < bufferToFill.numSamples; sample++)
+        pSmoother.at(i).setTargetValue(level);
+        
+        for(int sample = 0; sample < bufferToFill.numSamples; sample++)
         {
             auto levelSample = oscillators.at(i)->getNextSample();
-            leftBuffer[sample] += levelSample * level;
-            rightBuffer[sample] += levelSample * level;
+            leftBuffer[sample] += levelSample * pSmoother.at(i).getNextValue();
+            rightBuffer[sample] += levelSample * pSmoother.at(i).getNextValue();
         }
     }
-    
-
 
 
 }

@@ -72,7 +72,6 @@ public:
     void updateOscillators();
     void createWavetable();
     
-    
 private:
     //==============================================================================
     Grid grid;
@@ -91,6 +90,8 @@ private:
     std::vector<WavetableOscillator*> oscillators;
     std::vector<int> relatedIndices;
     float currentSamplerate;
+    
+    std::vector<juce::SmoothedValue<float> > pSmoother;
         
     //==============================================================================
 
